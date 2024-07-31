@@ -1,0 +1,42 @@
+.field {
+  background-color: rgb(252, 253, 253);
+  border: 1px solid rgb(158, 156, 156);
+  border-radius: 3px;
+  height: 24px;
+  color: black;
+  display: flex;
+  align-items: flex-start;
+}
+.submitBtn {
+  border: 1px solid rgb(82, 80, 40);
+  border-radius: 3px;
+  background-color: rgb(227, 230, 230);
+  margin: 0 auto;
+  color: black;
+  cursor: pointer;
+}
+.field:hover,
+.field:focus {
+  border: 1px solid rgb(37, 37, 36);
+}
+.titleField {
+  color: #000;
+  font-weight: 600;
+  margin-right: 8px;
+}
+.contactForm {
+  border: 1px solid rgb(53, 52, 52);
+  width: 300px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+.formItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
