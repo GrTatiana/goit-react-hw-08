@@ -1,6 +1,16 @@
-import React from "react";
+import Contact from "../Contact/Contact";
+import css from "./ContactList.module.css";
 
-const ContactList = () => {
-  return <div></div>;
+const ContactList = ({ contactFromData }) => {
+  console.log(contactFromData);
+  return (
+    <>
+      <ul className={css.list}>
+        {contactFromData.map(({ id, name, number }) => (
+          <Contact key={id} name={name} number={number} />
+        ))}
+      </ul>
+    </>
+  );
 };
 export default ContactList;

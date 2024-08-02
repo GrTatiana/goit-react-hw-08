@@ -1,9 +1,23 @@
-import css from "./Contact/Contact.module.css";
-const Contact = () => {
-  return <div>
+import css from "./Contact.module.css";
+import { FaUser } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa6";
+const Contact = ({ name, number }) => {
+  return (
     <div className={css.liItem}>
-      <img className={css.img} src={avatar} alt="Avatar" width="48" />
-      <p className={css.name}>{name}</p>
-  </div>;
+      <div className={css.paragraphs}>
+        <p className={css.nameNumber}>
+          <FaUser />
+          {name}
+        </p>
+        <p className={css.nameNumber}>
+          <FaPhone />
+          {number}
+        </p>
+      </div>
+      <button type="button" className={css.delBtn}>
+        Delete
+      </button>
+    </div>
+  );
 };
 export default Contact;

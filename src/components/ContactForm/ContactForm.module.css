@@ -10,7 +10,7 @@
 .submitBtn {
   border: 1px solid rgb(82, 80, 40);
   border-radius: 3px;
-  background-color: rgb(227, 230, 230);
+  background-color: rgb(236, 238, 238);
   margin: 0 auto;
   color: black;
   cursor: pointer;
@@ -39,4 +39,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+.errorText {
+  color: #000;
+  background-color: blue;
+  border-radius: 4px;
 }
