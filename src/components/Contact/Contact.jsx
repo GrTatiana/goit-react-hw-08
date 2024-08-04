@@ -1,7 +1,8 @@
 import css from "./Contact.module.css";
 import { FaUser } from "react-icons/fa";
 import { FaPhone } from "react-icons/fa6";
-const Contact = ({ name, number }) => {
+
+const Contact = ({ id, name, number, delContact }) => {
   return (
     <div className={css.liItem}>
       <div className={css.paragraphs}>
@@ -14,7 +15,11 @@ const Contact = ({ name, number }) => {
           {number}
         </p>
       </div>
-      <button type="button" className={css.delBtn}>
+      <button
+        type="button"
+        className={css.delBtn}
+        onClick={() => delContact(id)}
+      >
         Delete
       </button>
     </div>
