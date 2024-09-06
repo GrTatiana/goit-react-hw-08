@@ -2,8 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import css from "../ContactForm/ContactForm.module.css";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import { nanoid } from "nanoid";
-import { addContact } from "../../redux/contactsSlice";
+import { addContact } from "../../redux/contactsOps";
 
 const phoneRegExp = /^[0-9]{3}-[0-9]{2}-[0-9]{2}$/;
 
@@ -25,11 +24,7 @@ const ContactForm = () => {
   };
 
   const onAddContact = (contact, actions) => {
-    const finalContact = {
-      ...contact,
-      id: nanoid(),
-    };
-    dispatch(addContact(finalContact));
+    dispatch(addContact(contact));
     actions.resetForm();
   };
   return (
@@ -40,8 +35,10 @@ const ContactForm = () => {
     >
       <Form className={css.contactForm}>
         <span className={css.formItem}>
-          <label className={css.titleField}>Name</label>
-          <Field className={css.field} type="text" name="name" required />{" "}
+          <label className={css.titleField} htmlFor="name">
+            Name
+          </label>
+          <Field className={css.field} type="text" name="name" required />
           <ErrorMessage
             className={css.errorText}
             name="name"
@@ -49,7 +46,9 @@ const ContactForm = () => {
           />
         </span>
         <span className={css.formItem}>
-          <label className={css.titleField}>Number</label>
+          <label className={css.titleField} htmlFor="number">
+            Number
+          </label>
           <Field className={css.field} type="tel" name="number" required />
           <ErrorMessage
             className={css.errorText}
