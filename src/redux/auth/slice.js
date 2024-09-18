@@ -1,6 +1,5 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
-import { fetchContacts, deleteContact, addContact } from "./contactsOps";
-import { selectContacts, selectNameFilter } from "./contactsSelectors";
+import { createSlice } from "@reduxjs/toolkit";
+import { logIn, logOut, refreshUser, register } from "./operations";
 
 const INITIAL_STATE = {
   user: {
@@ -10,51 +9,46 @@ const INITIAL_STATE = {
   token: null,
   isLoggedIn: false,
   isRefreshing: false,
+  error: null,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState: INITIAL_STATE,
-  // extraReducers: (builder) =>
-  //   builder
-  //     .addCase(fetchContacts.pending, (state) => {
-  //       state.loading = true;
-  //       state.error = null;
-  //     })
-  //     .addCase(fetchContacts.fulfilled, (state, action) => {
-  //       state.loading = false;
-  //       state.items = action.payload;
-  //     })
-  //     .addCase(fetchContacts.rejected, (state, action) => {
-  //       state.loading = false;
-  //       state.error = action.payload;
-  //     })
-  //     .addCase(deleteContact.pending, (state) => {
-  //       state.loading = true;
-  //       state.error = null;
-  //     })
-  //     .addCase(deleteContact.fulfilled, (state, action) => {
-  //       state.loading = false;
-  //       state.items = state.items.filter(
-  //         (contact) => contact.id !== action.payload
-  //       );
-  //     })
-  //     .addCase(deleteContact.rejected, (state, action) => {
-  //       state.loading = false;
-  //       state.error = action.payload;
-  //     })
-  //     .addCase(addContact.pending, (state) => {
-  //       state.loading = true;
-  //       state.error = null;
-  //     })
-  //     .addCase(addContact.fulfilled, (state, action) => {
-  //       state.loading = false;
-  //       state.items.push(action.payload);
-  //     })
-  //     .addCase(addContact.rejected, (state, action) => {
-  //       state.loading = false;
-  //       state.error = action.payload;
-  //     }),
+
+  extraReducers: (builder) =>
+    builder
+      .addCase(register.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isLoggedIn = true;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(logIn.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isLoggedIn = true;
+      })
+      .addCase(logOut.fulfilled, (state) => {
+        state.user = INITIAL_STATE.user;
+        state.token = null;
+        state.isLoggedIn = false;
+      })
+      .addCase(refreshUser.pending, (state) => {
+        state.isRefreshing = true;
+        state.error = null;
+      })
+      .addCase(refreshUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoggedIn = true;
+        state.isRefreshing = false;
+      })
+      .addCase(refreshUser.rejected, (state, action) => {
+        state.isRefreshing = false;
+        state.error = action.payload;
+      }),
 });
 
 export const authReducer = authSlice.reducer;

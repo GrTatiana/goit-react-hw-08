@@ -1,30 +1,46 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import css from "../components/SearchPostsForm/SearchPostsForm.module.css";
-// import { useDispatch, useSelector } from "react-redux";
-import { apiRegister } from "../redux/auth/operations";
-// import { selectAuthError } from "../redux/auth/selectors";
+import { register } from "../../redux/auth/operations";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
-function RegistrationForm() {
+const RegistrationForm = () => {
   const RegisterValidationSchema = Yup.object().shape({
     name: Yup.string()
       .required("Ім'я користувача є обов'язковим")
       .min(2, "Ім'я користувача має бути мінімум в 2 символи")
       .max(100, "Ім'я користувача має бути меншим за 100 символів"),
-    password: Yup.string()
-      .required("Пароль є обов'язковим")
-      .min(8, "Пароль має бути мінімум в 8 символи")
-      .max(100, "Пароль має бути меншим за 100 символів"),
-
     email: Yup.string()
       .email("Некоректна електронна адреса")
-      .required("Електронна адреса є обов'язковим"),
+      .required("Електронна адреса є обов'язковою"),
+    password: Yup.string()
+      .min(8, "Пароль має містити не менше 8 символів")
+      .required("Пароль є обов’язковим"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Паролі повинні збігатися")
+      .required("Підтвердження паролю є обов’язковим"),
   });
 
-  const handleSubmit = (values) => {
-    dispatch(apiRegister(values));
+  const INITIAL_VALUES = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   };
 
+  const dispatch = useDispatch();
+  const handleSubmit = (values, { resetForm }) => {
+    dispatch(register(values))
+      .unwrap()
+      .then(() => {
+        toast.success("Login successful");
+      })
+      .catch(() => {
+        toast.error("Login error");
+      });
+    resetForm();
+  };
   return (
     <Formik
       initialValues={INITIAL_VALUES}
@@ -35,19 +51,20 @@ function RegistrationForm() {
         <Form className={css.form}>
           <label className={css.label}>
             <span>Ім&apos;я користувача:</span>
-            <Field type="text" name="name" placeholder="Кирило" />
+            <Field type="text" name="name" placeholder="Василь" />
             <ErrorMessage
               className={css.errorText}
               name="name"
               component="span"
             />
           </label>
+
           <label className={css.label}>
             <span>Електронна адреса:</span>
             <Field
               type="text"
               name="email"
-              placeholder="kirilo.example@gmail.com"
+              placeholder="vasil.example@gmail.com"
             />
             <ErrorMessage
               className={css.errorText}
@@ -70,6 +87,20 @@ function RegistrationForm() {
             />
           </label>
 
+          <label className={css.label}>
+            <span>Підтвердження паролю:</span>
+            <Field
+              type="password"
+              name="confirmPassword"
+              placeholder="Підтвердіть свій пароль"
+            />
+            <ErrorMessage
+              className={css.errorText}
+              name="confirmPassword"
+              component="span"
+            />
+          </label>
+
           <button
             disabled={Object.keys(errors).length > 0}
             className={css.submitBtn}
@@ -77,13 +108,10 @@ function RegistrationForm() {
           >
             Зареєструватися
           </button>
-          {error && (
-            <p className={css.errorText}>Oops, some error occured... {error}</p>
-          )}
         </Form>
       )}
     </Formik>
   );
-}
+};
 
 export default RegistrationForm;

@@ -14,7 +14,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 const authConfig = {
-  key: "contactsKey",
+  key: "auth",
   storage,
   whitelist: ["token"],
 };
@@ -32,3 +32,4 @@ export const store = configureStore({
       },
     }),
 });
+export const persistor = persistStore(store);
