@@ -6,6 +6,7 @@ import { deleteContact } from "../../redux/contacts/operations";
 
 const Contact = ({ id, name, number }) => {
   const dispatch = useDispatch();
+
   const onDelContact = (contactId) => {
     const action = deleteContact(contactId);
     dispatch(action);

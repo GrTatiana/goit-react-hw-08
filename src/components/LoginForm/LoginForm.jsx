@@ -1,33 +1,37 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import css from "../components/SearchPostsForm/SearchPostsForm.module.css";
-import { useDispatch, useSelector } from "react-redux";
-// import { apiRegister } from "../redux/auth/operations";
+import css from "./LoginForm.module.css";
+import { useDispatch } from "react-redux";
 import { logIn } from "../../redux/auth/operations";
-import { selectAuthError } from "../../redux/auth/selectors";
-// import { selectAuthError } from "../redux/auth/selectors";
+
+import toast from "react-hot-toast";
 
 const LoginValidationSchema = Yup.object().shape({
-  password: Yup.string()
-    .required("Пароль є обов'язковим")
-    .min(8, "Пароль має бути мінімум в 8 символи")
-    .max(100, "Пароль має бути меншим за 100 символів"),
-
   email: Yup.string()
-    .email("Некоректна електронна адреса")
-    .required("Електронна адреса є обов'язковим"),
+    .email("Incorrect email address")
+    .required("Email address is required"),
+  password: Yup.string()
+    .min(8, "The password must contain at least 8 characters")
+    .required("Password confirmation is required"),
 });
 
-const LoginPage = () => {
+const LoginForm = () => {
   const dispatch = useDispatch();
-  const error = useSelector(selectAuthError);
+
   const INITIAL_VALUES = {
     email: "",
     password: "",
   };
 
-  const handleSubmit = (values) => {
-    dispatch(logIn(values));
+  const handleSubmit = (values, { resetForm }) => {
+    dispatch(logIn(values))
+      .then(() => {
+        toast.success("Login successful");
+      })
+      .catch(() => {
+        toast.error("Login error");
+      });
+    resetForm();
   };
 
   return (
@@ -39,9 +43,10 @@ const LoginPage = () => {
       {({ errors }) => (
         <Form className={css.form}>
           <label className={css.label}>
-            <span>Електронна адреса:</span>
+            <span>Email:</span>
             <Field
               type="text"
+              className={css.field}
               name="email"
               placeholder="kirilo.example@gmail.com"
             />
@@ -53,11 +58,12 @@ const LoginPage = () => {
           </label>
 
           <label className={css.label}>
-            <span>Пароль:</span>
+            <span>Password:</span>
             <Field
               type="password"
+              className={css.field}
               name="password"
-              placeholder="Введіть свій пароль"
+              placeholder="Enter your password"
             />
             <ErrorMessage
               className={css.errorText}
@@ -71,16 +77,12 @@ const LoginPage = () => {
             className={css.submitBtn}
             type="submit"
           >
-            Залогінитися
+            Log In
           </button>
-
-          {error && (
-            <p className={css.errorText}>Oops, some error occured... {error}</p>
-          )}
         </Form>
       )}
     </Formik>
   );
 };
 
-export default LoginPage;
+export default LoginForm;

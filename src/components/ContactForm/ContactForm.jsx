@@ -27,6 +27,7 @@ const ContactForm = () => {
     dispatch(addContact(contact));
     actions.resetForm();
   };
+
   return (
     <Formik
       initialValues={initialValues}

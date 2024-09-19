@@ -1,26 +1,29 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import css from "../components/SearchPostsForm/SearchPostsForm.module.css";
+import css from "./RegistrationForm.module.css";
 import { register } from "../../redux/auth/operations";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuthError } from "../../redux/auth/selectors";
 
 const RegistrationForm = () => {
   const RegisterValidationSchema = Yup.object().shape({
     name: Yup.string()
-      .required("Ім'я користувача є обов'язковим")
-      .min(2, "Ім'я користувача має бути мінімум в 2 символи")
-      .max(100, "Ім'я користувача має бути меншим за 100 символів"),
+      .required("Username is required")
+      .min(2, "The username must be at least 2 characters long")
+      .max(100, "The username must be less than 100 characters"),
     email: Yup.string()
-      .email("Некоректна електронна адреса")
-      .required("Електронна адреса є обов'язковою"),
+      .email("Incorrect email address")
+      .required("Email address is required"),
     password: Yup.string()
-      .min(8, "Пароль має містити не менше 8 символів")
-      .required("Пароль є обов’язковим"),
+      .min(8, "The password must contain at least 8 characters")
+      .required("Password confirmation is required"),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Паролі повинні збігатися")
-      .required("Підтвердження паролю є обов’язковим"),
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Password confirmation is required"),
   });
+  const dispatch = useDispatch();
+  const errors = useSelector(selectAuthError);
 
   const INITIAL_VALUES = {
     name: "",
@@ -29,18 +32,18 @@ const RegistrationForm = () => {
     confirmPassword: "",
   };
 
-  const dispatch = useDispatch();
   const handleSubmit = (values, { resetForm }) => {
     dispatch(register(values))
       .unwrap()
       .then(() => {
-        toast.success("Login successful");
+        toast.success("Registration successful");
       })
       .catch(() => {
-        toast.error("Login error");
+        toast.error("Registration");
       });
     resetForm();
   };
+
   return (
     <Formik
       initialValues={INITIAL_VALUES}
@@ -50,8 +53,13 @@ const RegistrationForm = () => {
       {({ errors }) => (
         <Form className={css.form}>
           <label className={css.label}>
-            <span>Ім&apos;я користувача:</span>
-            <Field type="text" name="name" placeholder="Василь" />
+            <span>User name:</span>
+            <Field
+              type="text"
+              className={css.field}
+              name="name"
+              placeholder="Emma"
+            />
             <ErrorMessage
               className={css.errorText}
               name="name"
@@ -60,11 +68,12 @@ const RegistrationForm = () => {
           </label>
 
           <label className={css.label}>
-            <span>Електронна адреса:</span>
+            <span>Email address:</span>
             <Field
               type="text"
+              className={css.field}
               name="email"
-              placeholder="vasil.example@gmail.com"
+              placeholder="emma.example@gmail.com"
             />
             <ErrorMessage
               className={css.errorText}
@@ -74,11 +83,12 @@ const RegistrationForm = () => {
           </label>
 
           <label className={css.label}>
-            <span>Пароль:</span>
+            <span>Password:</span>
             <Field
+              className={css.field}
               type="password"
               name="password"
-              placeholder="Введіть свій пароль"
+              placeholder="Entet your password"
             />
             <ErrorMessage
               className={css.errorText}
@@ -88,11 +98,12 @@ const RegistrationForm = () => {
           </label>
 
           <label className={css.label}>
-            <span>Підтвердження паролю:</span>
+            <span>Password confirmation:</span>
             <Field
               type="password"
+              className={css.field}
               name="confirmPassword"
-              placeholder="Підтвердіть свій пароль"
+              placeholder="Confirm your password"
             />
             <ErrorMessage
               className={css.errorText}
@@ -106,7 +117,7 @@ const RegistrationForm = () => {
             className={css.submitBtn}
             type="submit"
           >
-            Зареєструватися
+            Register
           </button>
         </Form>
       )}
